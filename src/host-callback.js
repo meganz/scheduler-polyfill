@@ -177,7 +177,7 @@ class HostCallback {
         cancelIdleCallback(this.handle_);
         break;
       case CallbackType.SET_TIMEOUT:
-        clearTimeout(this.handle_);
+        this.handle_.abort();
         break;
       case CallbackType.POST_MESSAGE:
         getPostMessageCallbackManager().cancelCallback_(this.handle_);
@@ -201,9 +201,10 @@ class HostCallback {
     // MessageChannel is available, we use postMessage below.
     if (delay && delay > 0) {
       this.callbackType_ = CallbackType.SET_TIMEOUT;
-      this.handle_ = setTimeout(() => {
+      // eslint-disable-next-line no-undef
+      (this.handle_ = tSleep(delay / 1e3)).then(() => {
         this.runCallback_();
-      }, delay);
+      });
       return;
     }
 
@@ -237,7 +238,8 @@ class HostCallback {
     // Some JS environments may not support MessageChannel.
     // This makes setTimeout the only option.
     this.callbackType_ = CallbackType.SET_TIMEOUT;
-    this.handle_ = setTimeout(() => {
+    // eslint-disable-next-line no-undef
+    (this.handle_ = tSleep(0)).then(() => {
       this.runCallback_();
     });
   }

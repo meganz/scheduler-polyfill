@@ -12,7 +12,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "microbundle --raw --no-generateTypes -f iife src/polyfill.js && cp types/scheduler.d.ts dist/",
+    "build": "microbundle --raw --no-compress --no-sourcemap --strict --no-generateTypes -f iife src/polyfill.js && cp types/scheduler.d.ts dist/",
     "lint": "eslint src test",
     "test": "karma start --single-run --browsers ChromeHeadless karma.conf.js"
   },
